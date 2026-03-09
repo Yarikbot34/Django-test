@@ -1,0 +1,39 @@
+
+{% extends 'login/logbase.html' %}
+
+{% block title %}Вход в аккаунт{% endblock %}
+
+{% block header %}Вход{% endblock %}
+{% block subheader %}Добро пожаловать обратно!{% endblock %}
+
+{% block form %}
+<form method="POST" action="{% url 'login' %}">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label for="username">Email или логин</label>
+        <input type="text" id="username" name="username" required
+               placeholder="Введите email или логин" autofocus>
+    </div>
+
+    <div class="form-group">
+        <label for="password">Пароль</label>
+        <input type="password" id="password" name="password" required
+               placeholder="Введите пароль">
+    </div>
+
+    <div class="form-options">
+        <label class="checkbox-label">
+            <input type="checkbox" name="remember">
+            <span>Запомнить меня</span>
+        </label>
+        <a href="{% url 'password_recovery' %}" class="forgot-link">Забыли пароль?</a>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Войти</button>
+</form>
+{% endblock %}
+
+{% block footer %}
+<p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+{% endblock %}
