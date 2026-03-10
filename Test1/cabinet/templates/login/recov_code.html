@@ -1,0 +1,35 @@
+{% extends 'login/logbase.html' %}
+
+{% block title %}Подтверждение кода{% endblock %}
+
+{% block header %}Подтверждение{% endblock %}
+{% block subheader %}Введите код из письма{% endblock %}
+
+{% block form %}
+<form method="POST" action="{% url 'verify_code' %}">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="code">Код подтверждения</label>
+        <input type="text" id="code" name="code" required 
+               placeholder="123456" maxlength="6" 
+               pattern="[0-9]{6}" autofocus>
+    </div>
+
+    <div class="info-box">
+        <p>⏰ Код действителен 10 минут</p>
+        <p>📩 Отправлен на {{ email }}</p>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Подтвердить</button>
+</form>
+
+<div class="resend-code">
+    <p>Не получили код?</p>
+    <a href="{% url 'resend_code' %}" class="btn btn-secondary">Отправить повторно</a>
+</div>
+{% endblock %}
+
+{% block footer %}
+<p><a href="{% url 'login' %}">Вернуться ко входу</a></p>
+{% endblock %}
