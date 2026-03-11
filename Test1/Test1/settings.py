@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-adolfvisarionovich'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '192.168.1.34',
+    '10.185.234.145',
+    '10.192.165.46',
     '127.0.0.1'
 ]
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'background_task'
 ]
 
 MIDDLEWARE = [

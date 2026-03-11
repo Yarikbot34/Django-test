@@ -5,7 +5,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+from .sendmail import sendMail
 
 
 def Userlogin(request):
@@ -38,13 +38,7 @@ def UserRegister(request):
         password = request.POST.get('password')
         if password == request.POST.get('password_confirm') and not(User.objects.filter(username=username).exists()):
             recovcode = random.randint(1000000,9999999)
-            send_mail(
-                "Код подтверждения",
-                f"Здравствуйте {username}, ваш код подтверждения:\n{recovcode}.",
-                os.getenv('MAIL_BACK'),
-                ['yroslavbot1@gmail.com'],
-                fail_silently=False,
-            )
+            sendMail(recovcode, username, email)
             request.session['recovcode'] = recovcode
             request.session['usermail'] = email
             request.session['username'] = username
@@ -62,6 +56,16 @@ def PassRecov(request):
     if request.method == 'POST':
         pass
     return render(request, 'login/recov.html')
+
+def ResendMail(request):
+    print("ReSend")
+    if request.session['recovcode'] != None:
+        sendMail(
+            code = request.session['recovcode'],
+            name = request.session['username'],
+            mail = request.session['usermail']
+        )
+    return render(request, 'login/recov_code.html')
 
 def RecovCode(request):
     if request.session['type'] == 'register' and request.method == 'POST':
@@ -83,3 +87,4 @@ def RecovCode(request):
             return redirect('/')
         return render(request, 'login/recov_code.html')
     return render(request, 'login/recov_code.html')
+

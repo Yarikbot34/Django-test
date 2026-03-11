@@ -22,15 +22,45 @@
 
             <!-- Вход справа -->
             <div class="nav-right">
+                {% if user.is_authenticated %}
+                <a href="/profile/" class="btn-login">{{ user.username }}</a>
+            {% else %}
                 <a href="/login" class="btn-login">Вход</a>
+            {% endif %}
             </div>
         </nav>
     </header>
 
     <!-- Основной контент -->
-    <main class="main-content">
-        <h1>Добро пожаловать!</h1>
-        <p>Это пример страницы с верхним меню и подвалом.</p>
+    <main>
+        <div class="articles-container">
+            <h1>Все статьи</h1>
+
+            {% if publications %}
+                <div class="articles-grid">
+                    {% for publication in publications %}
+                        <article class="article-card">
+                            <div class="article-card-header">
+                                <h2 class="article-title">
+                                    <a href="/publication/{{ publication.id }}/">{{ publication.name }}</a>
+                                </h2>
+                            </div>
+                            <div class="article-card-body">
+                                <div class="article-date">{{ publication.date|date:"d.m.Y H:i" }}</div>
+                                <div class="article-text">{{ publication.text|truncatewords:30 }}</div>
+                            </div>
+                            <div class="article-card-footer">
+                                <a href="/publication/{{ publication.id }}/" class="article-read-more">Читать далее</a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-articles">
+                    <p>Статей пока нет</p>
+                </div>
+            {% endif %}
+        </div>
     </main>
 
     <!-- Подвал -->
