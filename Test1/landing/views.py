@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 def landing(request):
-    return render(request, 'landing/index.html')
+    return HttpResponse('<h1>Ответ получен</h1>')
