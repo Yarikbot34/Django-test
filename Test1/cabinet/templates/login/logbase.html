@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Авторизация{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'cabinet/css/login.css' %}">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-window">
+            <!-- Логотип -->
+            <div class="auth-logo">
+                {% block logo %}
+                <h1>Huita</h1>
+                {% endblock %}
+            </div>
+
+            <!-- Заголовок формы -->
+            <div class="auth-header">
+                <h2>{% block header %}Вход{% endblock %}</h2>
+                <p>{% block subheader %}Войдите в свой аккаунт{% endblock %}</p>
+            </div>
+
+            <!-- Форма -->
+            <div class="auth-form">
+                {% block form %}
+                <!-- Содержимое формы из дочерних шаблонов -->
+                {% endblock %}
+            </div>
+
+            <!-- Дополнительные ссылки -->
+            <div class="auth-footer">
+                {% block footer %}
+                <!-- Дополнительные ссылки из дочерних шаблонов -->
+                {% endblock %}
+            </div>
+
+            <!-- Сообщения об ошибках/успехе -->
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="message message-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Ошибки формы -->
+            {% if form.errors %}
+            <div class="form-errors">
+                {% for field in form %}
+                {% for error in field.errors %}
+                <div class="error">{{ error }}</div>
+                {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

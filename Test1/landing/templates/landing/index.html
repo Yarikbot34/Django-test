@@ -1,10 +1,59 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой Сайт</title>
+    <link rel="stylesheet" href="{% static 'landing/css/landing.css' %}">
 </head>
 <body>
+    <!-- Верхнее меню -->
+    <header class="header">
+        <nav class="navbar">
+            <!-- Логотип или название -->
+            <div class="logo">Huita</div>
 
+            <!-- Меню слева -->
+            <ul class="nav-menu">
+                <li><a href="#home">Главная</a></li>
+                <li><a href="#about">О нас</a></li>
+            </ul>
+
+            <!-- Вход справа -->
+            <div class="nav-right">
+                <a href="/login" class="btn-login">Вход</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+        <h1>Добро пожаловать!</h1>
+        <p>Это пример страницы с верхним меню и подвалом.</p>
+    </main>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>📧 Email: info@mysite.com</p>
+                <p>📱 Телефон: +7 (999) 123-45-67</p>
+                <p>📍 Адрес: г. Москва, ул. Примерная, 10</p>
+            </div>
+            <div class="footer-section">
+                <h3>Мы в соцсетях</h3>
+                <div class="social-links">
+                    <a href="#">VK</a>
+                    <a href="#">Telegram</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 MySite. Все права защищены.</p>
+        </div>
+    </footer>
 </body>
 </html>
