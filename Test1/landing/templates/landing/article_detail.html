@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ article.name }} - Huita</title>
+    <link rel="stylesheet" href="{% static 'landing/css/landing.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/articles.css' %}">
+</head>
+<body>
+    <!-- Шапка -->
+    <header class="header">
+        <nav class="navbar">
+            <a href="{% url 'main' %}" class="logo">Huita</a>
+            <ul class="nav-menu">
+                <li><a href="{% url 'main' %}">Главная</a></li>
+                <li><a href="#about">О нас</a></li>
+            </ul>
+            <div class="nav-right">
+                {% if user.is_authenticated %}
+                    <a href="/profile/" class="btn-login">{{ user.username }}</a>
+                {% else %}
+                    <a href="/login" class="btn-login">Вход</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="article-main">
+        <article class="article-detail">
+            <div class="article-header">
+                <h1>{{ article.name }}</h1>
+                <div class="article-meta">
+                    <span class="article-date">📅 {{ article.date|date:"d.m.Y H:i" }}</span>
+                </div>
+            </div>
+
+            <div class="article-content">
+                {{ article.text|linebreaks }}
+            </div>
+
+            <div class="article-footer">
+                <a href="{% url 'main' %}" class="btn-back">← Назад к статьям</a>
+            </div>
+        </article>
+    </main>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <!-- Ваш существующий футер -->
+    </footer>
+</body>
+</html>
