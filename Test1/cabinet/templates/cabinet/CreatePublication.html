@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новая статья - Huita</title>
+    <link rel="stylesheet" href="{% static 'landing/css/landing.css' %}">
+    <link rel="stylesheet" href="{% static 'cabinet/css/cabinet.css' %}">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="{% url 'main' %}" class="logo">Huita</a>
+            <ul class="nav-menu">
+                <li><a href="{% url 'main' %}">Главная</a></li>
+                <li><a href="{% url 'cabinet' %}">Кабинет</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="profile-main">
+        <div class="profile-container">
+            {% if work_type == 'Edit' %}
+            <h1>Редактирование статьи</h1>
+             <div class="profile-card">
+                <form method="POST" action="{% url 'article_redact' id=art.id %}">
+            {% else %}
+            <h1>Новая статья</h1>
+
+            <div class="profile-card">
+                <form method="POST" action="{% url 'create_article' %}">
+                    {% endif %}
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="form_title">Заголовок *</label>
+                        <input type="text" id="form_title" name="title" required
+                               placeholder="Введите заголовок статьи" maxlength="250">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="text">Текст статьи *</label>
+                        <textarea id="text" name="text" required rows="15"
+                                  placeholder="Напишите вашу статью..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        {% if work_type == 'Edit' %}
+                        <button type="submit" class="btn-submit">Изменить</button>
+                        {% else %}
+                        <button type="submit" class="btn-submit">Опубликовать</button>
+                        {% endif %}
+                        <a href="{% url 'cabinet' %}" class="btn-cancel">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+{% if work_type == 'Edit' and art %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Заполнение заголовка
+        const titleField = document.getElementById('form_title');
+        if (titleField) {
+            titleField.value = "{{ art.name|escapejs }}";
+        }
+
+        // Заполнение текста статьи
+        const textField = document.getElementById('text');
+        if (textField) {
+            textField.value = "{{ art.text|escapejs }}";
+        }
+    });
+</script>
+{% endif %}
+
+    <footer class="footer">
+        <div class="footer-bottom">
+            <p>© 2026 MySite. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <>
+</body>
+</html>

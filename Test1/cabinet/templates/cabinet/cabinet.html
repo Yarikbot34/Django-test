@@ -1,0 +1,185 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет - {{ user.username }}</title>
+    <link rel="stylesheet" href="{% static 'landing/css/landing.css' %}">
+    <link rel="stylesheet" href="{% static 'cabinet/css/cabinet.css' %}">
+</head>
+<body>
+    <!-- Шапка -->
+    <header class="header">
+        <nav class="navbar">
+            <a href="{% url 'main' %}" class="logo">Huita</a>
+            <ul class="nav-menu">
+                <li><a href="{% url 'main' %}">Главная</a></li>
+                <li><a href="#about">О нас</a></li>
+            </ul>
+            <div class="nav-right">
+                <span class="user-greeting">👤 {{ user.username }}</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="profile-main">
+        <div class="profile-container">
+            <h1>Личный кабинет</h1>
+
+            <!-- Инфо о пользователе -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="avatar-circle">
+                        {{ user.username|first|upper }}
+                    </div>
+                    <div class="profile-info">
+                        <h2>{{ user.username }}</h2>
+                        <p>📧 {{ user.email }}</p>
+                        <p>📅 Регистрация: {{ user.date_joined|date:"d.m.Y" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Действия -->
+            <div class="profile-actions">
+                <a href="{% url 'create_article' %}" class="action-btn primary">
+                    ✏️ Написать статью
+                </a>
+                <button class="action-btn secondary" onclick="togglePasswordModal()">
+                    🔑 Изменить пароль
+                </button>
+                <a href="{% url 'main' %}" class="action-btn">
+                    🏠 На главную
+                </a>
+                <a href="{% url 'logout' %}" class="action-btn danger">
+                    🚪 Выйти
+                </a>
+            </div>
+
+            <!-- Статьи пользователя -->
+            <div class="profile-section">
+                <h3>Ваши статьи:</h3>
+
+                {% if user_articles %}
+                    <div class="articles-list">
+                        {% for article in user_articles %}
+                            <div class="article-item">
+                                <div class="article-info">
+                                    <h4>{{ article.name }}</h4>
+                                    <p>📅 {{ article.date|date:"d.m.Y H:i" }}</p>
+                                </div>
+                                <div class="article-actions">
+                                    <a href="{% url 'article_detail' id=article.id %}" class="btn-view" title="К статье">
+                                        👁️
+                                    </a>
+                                    <a href="{% url 'article_delete' id=article.id %}" class="btn-delete" title="Удалить">
+                                        ✖️
+                                    </a>
+                                    <a href="{% url 'article_redact' id=article.id %}" class="btn-view" title="Удалить">
+                                        Рд
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-articles">
+                        <p>У вас пока нет статей</p>
+                        <a href="{% url 'create_article' %}" class="btn-create">
+                            Создать первую статью
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <!-- Модальное окно изменения пароля -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="togglePasswordModal()">&times;</span>
+            <h2>Изменение пароля</h2>
+
+            <form action="{% url 'change_password' %}" method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>Текущий пароль</label>
+                    <input type="password" name="current_password" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Новый пароль</label>
+                    <input type="password" name="new_password" required minlength="8">
+                </div>
+
+                <div class="form-group">
+                    <label>Подтверждение пароля</label>
+                    <input type="password" name="confirm_password" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Изменить пароль</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>📧 Email: info@mysite.com</p>
+                <p>📱 Телефон: +7 (999) 123-45-67</p>
+                <p>📍 Адрес: г. Москва, ул. Примерная, 10</p>
+            </div>
+            <div class="footer-section">
+                <h3>Мы в соцсетях</h3>
+                <div class="social-links">
+                    <a href="#">VK</a>
+                    <a href="#">Telegram</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 MySite. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Сообщения -->
+    {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="message message-{{ message.tags }}">
+                    {{ message }}
+                    <span class="close-message" onclick="this.parentElement.remove()">&times;</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <script>
+        function togglePasswordModal() {
+            const modal = document.getElementById('passwordModal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Закрытие модального окна при клике вне его
+        window.onclick = function(event) {
+            const modal = document.getElementById('passwordModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Автоскрытие сообщений через 5 секунд
+        setTimeout(() => {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(msg => msg.style.opacity = '0');
+            setTimeout(() => messages.forEach(msg => msg.remove()), 500);
+        }, 5000);
+    </script>
+</body>
+</html>

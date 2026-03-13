@@ -1,11 +1,12 @@
 import os
 import random
-
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .sendmail import sendMail
+from landing.models import Publication
 
 
 def Userlogin(request):
@@ -87,4 +88,22 @@ def RecovCode(request):
             return redirect('/')
         return render(request, 'login/recov_code.html')
     return render(request, 'login/recov_code.html')
+
+@login_required(login_url='/login')
+def Cabinet(request):
+    print(request.user.username)
+    publications = Publication.objects.filter(author=request.user.id)
+    return render(request, 'cabinet/cabinet.html', {'user_articles': publications})
+
+
+@login_required(login_url='/login')
+def UserLogout(request):
+    logout(request)
+    messages.info(request, 'Вы вышли из аккаунта')
+    return redirect('main')
+
+
+
+
+
 
